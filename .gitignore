@@ -1,5 +1,7 @@
-
 target/
 dbt_modules/
+dbt_packages/
 logs/
 profiles_override.yml
+*.duckdb
+*.duckdb.wal

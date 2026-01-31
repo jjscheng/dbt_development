@@ -1,0 +1,161 @@
+version: 2
+
+sources:
+  - name: tpch
+    description: TPC-H benchmark dataset - a standard database benchmark for decision support workloads
+    database: tpch
+    schema: main
+    tables:
+      - name: customer
+        description: Customer information
+        columns:
+          - name: c_custkey
+            description: Primary key - unique customer identifier
+          - name: c_name
+            description: Customer name
+          - name: c_address
+            description: Customer address
+          - name: c_nationkey
+            description: Foreign key to nation table
+          - name: c_phone
+            description: Customer phone number
+          - name: c_acctbal
+            description: Customer account balance
+          - name: c_mktsegment
+            description: Market segment (AUTOMOBILE, BUILDING, FURNITURE, HOUSEHOLD, MACHINERY)
+          - name: c_comment
+            description: Miscellaneous comment
+
+      - name: lineitem
+        description: Line items for orders - the largest table in TPC-H
+        columns:
+          - name: l_orderkey
+            description: Foreign key to orders table
+          - name: l_partkey
+            description: Foreign key to part table
+          - name: l_suppkey
+            description: Foreign key to supplier table
+          - name: l_linenumber
+            description: Line number within the order
+          - name: l_quantity
+            description: Quantity ordered
+          - name: l_extendedprice
+            description: Extended price (quantity * base price)
+          - name: l_discount
+            description: Discount percentage
+          - name: l_tax
+            description: Tax rate
+          - name: l_returnflag
+            description: Return flag (R=returned, A=accepted, N=none)
+          - name: l_linestatus
+            description: Line status (O=open, F=fulfilled)
+          - name: l_shipdate
+            description: Ship date
+          - name: l_commitdate
+            description: Commit date
+          - name: l_receiptdate
+            description: Receipt date
+          - name: l_shipinstruct
+            description: Shipping instructions
+          - name: l_shipmode
+            description: Shipping mode (AIR, RAIL, SHIP, TRUCK, etc.)
+          - name: l_comment
+            description: Miscellaneous comment
+
+      - name: nation
+        description: Nations/countries reference data
+        columns:
+          - name: n_nationkey
+            description: Primary key - unique nation identifier
+          - name: n_name
+            description: Nation name
+          - name: n_regionkey
+            description: Foreign key to region table
+          - name: n_comment
+            description: Miscellaneous comment
+
+      - name: orders
+        description: Customer orders
+        columns:
+          - name: o_orderkey
+            description: Primary key - unique order identifier
+          - name: o_custkey
+            description: Foreign key to customer table
+          - name: o_orderstatus
+            description: Order status (O=open, F=fulfilled, P=pending)
+          - name: o_totalprice
+            description: Total order price
+          - name: o_orderdate
+            description: Order date
+          - name: o_orderpriority
+            description: Order priority (1-URGENT through 5-LOW)
+          - name: o_clerk
+            description: Clerk who processed the order
+          - name: o_shippriority
+            description: Shipping priority
+          - name: o_comment
+            description: Miscellaneous comment
+
+      - name: part
+        description: Parts/products catalog
+        columns:
+          - name: p_partkey
+            description: Primary key - unique part identifier
+          - name: p_name
+            description: Part name
+          - name: p_mfgr
+            description: Manufacturer
+          - name: p_brand
+            description: Brand
+          - name: p_type
+            description: Part type
+          - name: p_size
+            description: Part size
+          - name: p_container
+            description: Container type
+          - name: p_retailprice
+            description: Retail price
+          - name: p_comment
+            description: Miscellaneous comment
+
+      - name: partsupp
+        description: Part-supplier relationship (which suppliers provide which parts)
+        columns:
+          - name: ps_partkey
+            description: Foreign key to part table
+          - name: ps_suppkey
+            description: Foreign key to supplier table
+          - name: ps_availqty
+            description: Available quantity from this supplier
+          - name: ps_supplycost
+            description: Supply cost from this supplier
+          - name: ps_comment
+            description: Miscellaneous comment
+
+      - name: region
+        description: Geographic regions reference data
+        columns:
+          - name: r_regionkey
+            description: Primary key - unique region identifier
+          - name: r_name
+            description: Region name (AFRICA, AMERICA, ASIA, EUROPE, MIDDLE EAST)
+          - name: r_comment
+            description: Miscellaneous comment
+
+      - name: supplier
+        description: Suppliers information
+        columns:
+          - name: s_suppkey
+            description: Primary key - unique supplier identifier
+          - name: s_name
+            description: Supplier name
+          - name: s_address
+            description: Supplier address
+          - name: s_nationkey
+            description: Foreign key to nation table
+          - name: s_phone
+            description: Supplier phone number
+          - name: s_acctbal
+            description: Supplier account balance
+          - name: s_comment
+            description: Miscellaneous comment

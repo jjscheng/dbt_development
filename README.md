@@ -1,21 +1,62 @@
-# Data ops
+# TPC-H DuckDB dbt Project
 
-Code for blog at http://www.startdataengineering.com/post/cicd-dbt
+A dbt project that connects to a DuckDB database with the TPC-H benchmark dataset.
 
-## 1. Fill in connection details
+## Setup
 
-Fill in [profiles.yml](./profiles.yml) with your snowflake credentials
-
-## 2. Develop dbt locally
-
-Run the following commands from your terminal
+### 1. Install dependencies
 
 ```bash
-docker run --rm -v $(pwd):/usr/app -v $(pwd):/root/.dbt fishtownanalytics/dbt:0.19.0 deps
-docker run --rm -v $(pwd):/usr/app -v $(pwd):/root/.dbt fishtownanalytics/dbt:0.19.0 compile -- optionally, if you want to see the compiled SQL before running
-docker run --rm -v $(pwd):/usr/app -v $(pwd):/root/.dbt fishtownanalytics/dbt:0.19.0 run
-docker run --rm -v $(pwd):/usr/app -v $(pwd):/root/.dbt fishtownanalytics/dbt:0.19.0 test
-docker run --rm -v $(pwd):/usr/app -v $(pwd):/root/.dbt fishtownanalytics/dbt:0.19.0 docs generate
-docker run --rm -ip 8080:8080 -v $(pwd):/usr/app -v $(pwd)/:/root/.dbt fishtownanalytics/dbt:0.19.0 docs serve
-docker run --rm -ip 8080:8080 -v $(pwd):/usr/app -v $(pwd)/:/root/.dbt fishtownanalytics/dbt:0.19.0 clean
+pip install dbt-duckdb
 ```
+
+### 2. Initialize the TPC-H database
+
+Run the setup script to create the DuckDB database with TPC-H sample data:
+
+```bash
+python scripts/setup_tpch.py
+```
+
+This creates `tpch.duckdb` with the following tables:
+- `customer` - Customer information
+- `lineitem` - Order line items
+- `nation` - Nations reference data
+- `orders` - Customer orders
+- `part` - Parts catalog
+- `partsupp` - Part-supplier relationships
+- `region` - Geographic regions
+- `supplier` - Supplier information
+
+### 3. Run dbt
+
+```bash
+# Test the connection
+dbt debug --profiles-dir .
+
+# Run all models
+dbt run --profiles-dir .
+
+# Run tests
+dbt test --profiles-dir .
+```
+
+## Project Structure
+
+```
+models/
+  staging/
+    _sources.yml          # Source definitions for TPC-H tables
+    stg_customers.sql     # Staging model for customers
+    stg_lineitems.sql     # Staging model for line items
+    stg_nations.sql       # Staging model for nations
+    stg_orders.sql        # Staging model for orders
+    stg_parts.sql         # Staging model for parts
+    stg_partsupps.sql     # Staging model for part-supplier
+    stg_regions.sql       # Staging model for regions
+    stg_suppliers.sql     # Staging model for suppliers
+```
+
+## TPC-H Overview
+
+TPC-H is a decision support benchmark that consists of a suite of business-oriented ad-hoc queries and concurrent data modifications. The data model represents a wholesale supplier with parts, suppliers, customers, orders, and nations/regions.
