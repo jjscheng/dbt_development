@@ -1,0 +1,153 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: >
+      Customer dimension enriched with nation and region. One row per customer.
+    columns:
+      - name: customer_key
+        description: "Primary key — surrogate from TPC-H customer"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        tests:
+          - not_null
+      - name: market_segment
+        description: "Customer market segment (e.g. AUTOMOBILE, BUILDING, FURNITURE)"
+      - name: nation_name
+        description: "Customer's nation"
+      - name: region_name
+        description: "Customer's region (e.g. AFRICA, AMERICA, ASIA, EUROPE, MIDDLE EAST)"
+
+  - name: dim_supplier
+    description: >
+      Supplier dimension enriched with nation and region. One row per supplier.
+    columns:
+      - name: supplier_key
+        description: "Primary key — surrogate from TPC-H supplier"
+        tests:
+          - unique
+          - not_null
+      - name: supplier_name
+        tests:
+          - not_null
+      - name: nation_name
+        description: "Supplier's nation"
+      - name: region_name
+        description: "Supplier's region"
+
+  - name: dim_part
+    description: >
+      Part/product dimension. One row per part.
+    columns:
+      - name: part_key
+        description: "Primary key — surrogate from TPC-H part"
+        tests:
+          - unique
+          - not_null
+      - name: brand
+        description: "Part brand (e.g. Brand#13)"
+      - name: part_type
+        description: "Hierarchical part type (e.g. SMALL BRUSHED STEEL)"
+      - name: retail_price
+        description: "Manufacturer's suggested retail price"
+
+  - name: dim_date
+    description: >
+      Date dimension derived from all order dates in the TPC-H dataset.
+      Provides standard calendar attributes for time-series analysis.
+    columns:
+      - name: date_day
+        description: "The calendar date (primary key)"
+        tests:
+          - unique
+          - not_null
+      - name: year_number
+      - name: quarter_number
+      - name: month_number
+      - name: month_name
+      - name: day_of_month
+      - name: day_of_week
+      - name: day_of_year
+      - name: day_name
+      - name: is_weekend
+        description: "True if the date falls on Saturday or Sunday"
+      - name: year_quarter
+        description: "e.g. 2023-Q1"
+      - name: year_month
+        description: "e.g. 2023-01"
+
+  - name: fct_orders
+    description: >
+      Order-grain fact table. One row per order.
+      Financial measures are aggregated from line items.
+    columns:
+      - name: order_key
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: customer_key
+        description: "Foreign key to dim_customer"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Foreign key to dim_date"
+        tests:
+          - not_null
+      - name: status_code
+        description: "Order status: O=Open, F=Fulfilled, P=Partially fulfilled"
+      - name: priority_code
+        description: "Order priority: 1-URGENT, 2-HIGH, 3-MEDIUM, 4-NOT SPECIFIED, 5-LOW"
+      - name: line_item_count
+        description: "Number of line items in the order"
+      - name: gross_item_sales_amount
+        description: "Sum of extended price across all line items before discount"
+      - name: net_item_sales_amount
+        description: "Sum of extended price after discount"
+      - name: item_discount_amount
+        description: "Total discount given on the order"
+
+  - name: fct_order_items
+    description: >
+      Line-item grain fact table (most granular). One row per order line item.
+      Connects to all four dimensions: customer, supplier, part, and date.
+    columns:
+      - name: order_item_key
+        description: "Surrogate primary key (md5 of order_key + line_number)"
+        tests:
+          - unique
+          - not_null
+      - name: order_key
+        description: "Foreign key to fct_orders"
+        tests:
+          - not_null
+      - name: part_key
+        description: "Foreign key to dim_part"
+        tests:
+          - not_null
+      - name: supplier_key
+        description: "Foreign key to dim_supplier"
+        tests:
+          - not_null
+      - name: customer_key
+        description: "Foreign key to dim_customer"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Foreign key to dim_date"
+        tests:
+          - not_null
+      - name: quantity
+        description: "Quantity of the part ordered"
+      - name: gross_item_sales_amount
+        description: "Extended price before discount and tax"
+      - name: discount_percentage
+        description: "Discount as a decimal (e.g. 0.05 = 5%)"
+      - name: net_item_sales_amount
+        description: "Extended price after discount, before tax"
+      - name: item_discount_amount
+        description: "Discount amount in dollars"
+      - name: net_item_sales_amount_after_tax
+        description: "Net sales amount after applying tax"

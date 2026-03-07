@@ -1,0 +1,118 @@
+version: 2
+
+models:
+  - name: stg_tpch_orders
+    description: "Staged orders with renamed columns"
+    columns:
+      - name: order_key
+        description: "Primary key for orders"
+        tests:
+          - unique
+          - not_null
+      - name: customer_key
+        description: "Foreign key to customer"
+        tests:
+          - not_null
+      - name: status_code
+        description: "Order status: O=Open, F=Fulfilled, P=Partially fulfilled"
+      - name: order_date
+        description: "Date the order was placed"
+        tests:
+          - not_null
+
+  - name: stg_tpch_lineitems
+    description: "Staged line items with renamed columns"
+    columns:
+      - name: order_key
+        description: "Foreign key to orders"
+        tests:
+          - not_null
+      - name: line_number
+        description: "Line number within the order"
+        tests:
+          - not_null
+      - name: part_key
+        description: "Foreign key to parts"
+        tests:
+          - not_null
+      - name: supplier_key
+        description: "Foreign key to suppliers"
+        tests:
+          - not_null
+      - name: quantity
+        description: "Quantity of parts ordered"
+      - name: extended_price
+        description: "Gross price before discounts and tax"
+      - name: discount_percentage
+        description: "Discount as a decimal (e.g. 0.05 = 5%)"
+      - name: tax_rate
+        description: "Tax rate as a decimal"
+
+  - name: stg_tpch_customers
+    description: "Staged customers with renamed columns"
+    columns:
+      - name: customer_key
+        description: "Primary key for customers"
+        tests:
+          - unique
+          - not_null
+      - name: nation_key
+        description: "Foreign key to nations"
+        tests:
+          - not_null
+
+  - name: stg_tpch_suppliers
+    description: "Staged suppliers with renamed columns"
+    columns:
+      - name: supplier_key
+        description: "Primary key for suppliers"
+        tests:
+          - unique
+          - not_null
+      - name: nation_key
+        description: "Foreign key to nations"
+        tests:
+          - not_null
+
+  - name: stg_tpch_parts
+    description: "Staged parts catalog with renamed columns"
+    columns:
+      - name: part_key
+        description: "Primary key for parts"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_tpch_partsuppliers
+    description: "Staged part-supplier bridging data with renamed columns"
+    columns:
+      - name: part_key
+        description: "Foreign key to parts"
+        tests:
+          - not_null
+      - name: supplier_key
+        description: "Foreign key to suppliers"
+        tests:
+          - not_null
+
+  - name: stg_tpch_nations
+    description: "Staged nations reference data with renamed columns"
+    columns:
+      - name: nation_key
+        description: "Primary key for nations"
+        tests:
+          - unique
+          - not_null
+      - name: region_key
+        description: "Foreign key to regions"
+        tests:
+          - not_null
+
+  - name: stg_tpch_regions
+    description: "Staged regions reference data with renamed columns"
+    columns:
+      - name: region_key
+        description: "Primary key for regions"
+        tests:
+          - unique
+          - not_null
